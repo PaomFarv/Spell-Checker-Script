@@ -1,5 +1,5 @@
 from spellchecker import SpellChecker
-
+import os
 
 class SpellCheckerApp():
     def __init__(self):
@@ -26,10 +26,26 @@ class SpellCheckerApp():
                 corrected_text.append(word)
         print(' '.join(corrected_text))
         
+def clear_terminal(): 
+    if os.name == 'nt':  # Windows
+        os.system('cls')
+    else:  # macOS and Linux
+        os.system('clear')
+
+clear_terminal()
 
 app = SpellCheckerApp()
 
 if __name__ == "__main__":
-    app.user_text("This is a smaple text with some erors.")
-    app.correct_text("This is a smaple text with some erors.")
-    print("\nCoded by PaomFarv.\n")
+    while True:
+        print("\nWelcome to the Spell Checker Script!")
+
+        user_text = input("Please enter the text you want to check (or type 'q' to quit): ")
+        if user_text.lower() == 'q':
+            print("Exiting the Spell Checker Script.")
+            break
+
+        app.user_text(user_text)
+        print("\nCorrected text:")
+        app.correct_text(user_text)
+        print("\nCoded by PaomFarv.\n")
