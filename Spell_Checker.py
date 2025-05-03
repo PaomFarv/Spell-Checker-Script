@@ -1,5 +1,6 @@
 from spellchecker import SpellChecker
 import os
+from colorama import Fore
 
 class SpellCheckerApp():
     def __init__(self):
@@ -10,11 +11,11 @@ class SpellCheckerApp():
         self.misspelled_words = self.spell_checker.unknown(user_spelled_words)
         
         if self.misspelled_words:
-            print("Misspelled words:")
+            print(Fore.RED + "\nMisspelled words:")
             for word in self.misspelled_words:
                 print(f" - {word}")
         else:
-            print("No misspelled words found.")
+            print(Fore.GREEN + "No misspelled words found.")
 
     def correct_text(self, text):
         corrected_text = []
@@ -24,7 +25,7 @@ class SpellCheckerApp():
                 corrected_text.append(corrected_word)
             else:
                 corrected_text.append(word)
-        print(' '.join(corrected_text))
+        print(Fore.WHITE + ' '.join(corrected_text))
         
 def clear_terminal(): 
     if os.name == 'nt':  # Windows
@@ -38,7 +39,7 @@ app = SpellCheckerApp()
 
 if __name__ == "__main__":
     while True:
-        print("\nWelcome to the Spell Checker Script!")
+        print(Fore.YELLOW + "\nWelcome to the Spell Checker Script!")
 
         user_text = input("Please enter the text you want to check (or type 'q' to quit): ")
         if user_text.lower() == 'q':
@@ -46,6 +47,6 @@ if __name__ == "__main__":
             break
 
         app.user_text(user_text)
-        print("\nCorrected text:")
+        print(Fore.GREEN + "\nCorrected text:")
         app.correct_text(user_text)
         print("\nCoded by PaomFarv.\n")
