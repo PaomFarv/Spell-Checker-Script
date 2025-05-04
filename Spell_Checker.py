@@ -19,13 +19,14 @@ class SpellCheckerApp():
             print(Fore.GREEN + "No misspelled words found.")
 
     def correct_text(self, text):  
-        error_text = []
+        formatted_text = " "
         for word in text.split():
             if word in self.misspelled_words:
-                error_text.append(Fore.RED + word)
+                formatted_text += f"{Fore.RED}{word}{Fore.RESET} "
             else:
-                error_text.append(word)
-        print(Fore.WHITE + ' '.join(error_text))
+                formatted_text += word
+            
+        print(formatted_text)
         
 def clear_terminal(): 
     if os.name == 'nt':  # Windows
@@ -52,6 +53,6 @@ if __name__ == "__main__":
             break
 
         app.word_checker(user_text)
-        print(Fore.GREEN + "\nCorrected text:")
+        print(Fore.GREEN + "\nError Marked Text:")
         app.correct_text(user_text)
         print("\nCoded by PaomFarv.\n")
