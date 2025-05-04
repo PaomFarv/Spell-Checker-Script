@@ -6,8 +6,9 @@ class SpellCheckerApp():
     def __init__(self):
         self.spell_checker = SpellChecker()
     
-    def user_text(self,text):
+    def word_checker(self,text):
         user_spelled_words = text.split()
+        
         self.misspelled_words = self.spell_checker.unknown(user_spelled_words)
         
         if self.misspelled_words:
@@ -17,15 +18,14 @@ class SpellCheckerApp():
         else:
             print(Fore.GREEN + "No misspelled words found.")
 
-    def correct_text(self, text):
-        corrected_text = []
+    def correct_text(self, text):  
+        error_text = []
         for word in text.split():
             if word in self.misspelled_words:
-                corrected_word = self.spell_checker.correction(word)
-                corrected_text.append(corrected_word)
+                error_text.append(Fore.RED + word)
             else:
-                corrected_text.append(word)
-        print(Fore.WHITE + ' '.join(corrected_text))
+                error_text.append(word)
+        print(Fore.WHITE + ' '.join(error_text))
         
 def clear_terminal(): 
     if os.name == 'nt':  # Windows
@@ -39,14 +39,19 @@ app = SpellCheckerApp()
 
 if __name__ == "__main__":
     while True:
-        print(Fore.YELLOW + "\nWelcome to the Spell Checker Script!")
+        print(Fore.WHITE + "\nWelcome to the Spell Checker Script!")
 
         user_text = input("Please enter the text you want to check (or type 'q' to quit): ")
+        mod_user_text = user_text.replace(" ", "").replace(",", "").replace(".", "").replace("!", "").replace("?", "").replace("'", "").replace('"', "")
+        if not mod_user_text.isalpha():
+            print(Fore.RED + "Please enter only alphabetic characters.")
+            continue
+
         if user_text.lower() == 'q':
             print("Exiting the Spell Checker Script.")
             break
 
-        app.user_text(user_text)
+        app.word_checker(user_text)
         print(Fore.GREEN + "\nCorrected text:")
         app.correct_text(user_text)
         print("\nCoded by PaomFarv.\n")
