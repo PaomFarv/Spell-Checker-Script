@@ -1,6 +1,7 @@
 from spellchecker import SpellChecker
 import os
 from colorama import Fore
+import re
 
 class SpellCheckerApp():
     def __init__(self):
@@ -18,8 +19,8 @@ class SpellCheckerApp():
         else:
             print(Fore.GREEN + "No misspelled words found.")
 
-    def correct_text(self, text):  
-        formatted_text = " "
+    def error_marked_text(self, text):  
+        formatted_text = ""
         for word in text.split():
             if word in self.misspelled_words:
                 formatted_text += f"{Fore.RED}{word}{Fore.RESET} "
@@ -43,8 +44,10 @@ if __name__ == "__main__":
         print(Fore.WHITE + "\nWelcome to the Spell Checker Script!")
 
         user_text = input("Please enter the text you want to check (or type 'q' to quit): ")
-        mod_user_text = user_text.replace(" ", "").replace(",", "").replace(".", "").replace("!", "").replace("?", "").replace("'", "").replace('"', "")
-        if not mod_user_text.isalpha():
+        
+        try:
+            mod_user_text = "".join(re.findall(r"[A-Za-z ]", user_text))
+        except:
             print(Fore.RED + "Please enter only alphabetic characters.")
             continue
 
@@ -52,7 +55,7 @@ if __name__ == "__main__":
             print("Exiting the Spell Checker Script.")
             break
 
-        app.word_checker(user_text)
-        print(Fore.GREEN + "\nError Marked Text:")
-        app.correct_text(user_text)
+        app.word_checker(mod_user_text)
+        print(Fore.GREEN + "\nError Marked Text:" + Fore.RESET)
+        app.error_marked_text(mod_user_text)
         print("\nCoded by PaomFarv.\n")
