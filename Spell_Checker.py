@@ -7,33 +7,32 @@ class SpellCheckerApp():
     def __init__(self):
         self.spell_checker = SpellChecker()
         self.spell_checker.distance = 1
-    
-    def word_checker(self,text):
-        user_spelled_words = text.split()
+
+    def word_checker(self, words):
+        misspelled = self.spell_checker.unknown([w for w in words if w.isalpha()])
         
-        self.misspelled_words = self.spell_checker.unknown(user_spelled_words)
-        
-        if self.misspelled_words:
+        if misspelled:
             print(Fore.RED + f"\nMisspelled words: {Fore.GREEN}(With Suggestions){Fore.RED}")
-            for word in self.misspelled_words:
+            for word in misspelled:
                 print(f" - {word} -> {self.spell_checker.candidates(word)}")
         else:
             print(Fore.GREEN + "No misspelled words found.")
+        
+        return misspelled
 
-    def error_marked_text(self, text):  
+    def error_marked_text(self, words, misspelled):
         formatted_text = ""
-        for word in text.split():
-            if word in self.misspelled_words:
+        for word in words:
+            if word in misspelled:
                 formatted_text += f"{Fore.RED}{word}{Fore.RESET} "
             else:
                 formatted_text += f"{word} "
-            
         print(formatted_text)
-        
+
 def clear_terminal(): 
-    if os.name == 'nt':  # Windows
+    if os.name == 'nt':
         os.system('cls')
-    else:  # macOS and Linux
+    else:
         os.system('clear')
 
 clear_terminal()
@@ -44,19 +43,20 @@ if __name__ == "__main__":
     while True:
         print(Fore.WHITE + "\nWelcome to the Spell Checker Script!")
 
-        user_text = input("Please enter the text you want to check (or type 'q' to quit): ")
+        user_input = input("Please enter the text you want to check (or type 'q' to quit): ")
         
-        try:
-            mod_user_text = "".join(re.findall(r"[A-Za-z ]", user_text))
-        except:
-            print(Fore.RED + "Please enter only alphabetic characters.")
-            continue
-
-        if user_text.lower() == 'q':
+        if user_input.lower() == 'q':
             print("Exiting the Spell Checker Script.")
             break
 
-        app.word_checker(mod_user_text)
+        try:
+            # Keeps words and punctuation
+            words = re.findall(r"\w+|[^\w\s]", user_input)
+        except:
+            print(Fore.RED + "Please enter valid text.")
+            continue
+
+        misspelled = app.word_checker(words)
         print(Fore.GREEN + "\nError Marked Text:" + Fore.RESET)
-        app.error_marked_text(mod_user_text)
+        app.error_marked_text(words, misspelled)
         print("\nCoded by PaomFarv.\n")
