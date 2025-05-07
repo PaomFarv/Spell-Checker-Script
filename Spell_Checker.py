@@ -6,6 +6,7 @@ import re
 class SpellCheckerApp():
     def __init__(self):
         self.spell_checker = SpellChecker()
+        self.spell_checker.distance = 1
     
     def word_checker(self,text):
         user_spelled_words = text.split()
@@ -13,9 +14,9 @@ class SpellCheckerApp():
         self.misspelled_words = self.spell_checker.unknown(user_spelled_words)
         
         if self.misspelled_words:
-            print(Fore.RED + "\nMisspelled words:")
+            print(Fore.RED + f"\nMisspelled words: {Fore.GREEN}(With Suggestions){Fore.RED}")
             for word in self.misspelled_words:
-                print(f" - {word}")
+                print(f" - {word} -> {self.spell_checker.candidates(word)}")
         else:
             print(Fore.GREEN + "No misspelled words found.")
 
@@ -25,7 +26,7 @@ class SpellCheckerApp():
             if word in self.misspelled_words:
                 formatted_text += f"{Fore.RED}{word}{Fore.RESET} "
             else:
-                formatted_text += word
+                formatted_text += f"{word} "
             
         print(formatted_text)
         
